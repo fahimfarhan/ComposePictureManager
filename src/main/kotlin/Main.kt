@@ -6,6 +6,6 @@ import ui.App
 fun main() = application {
   Window(onCloseRequest = ::exitApplication) {
     val mApp = App()
-    mApp.AppHome()
+    mApp.appHome()
   }
 }
