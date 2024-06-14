@@ -3,6 +3,8 @@ package ui
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
@@ -12,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import domain.AppViewModel
+import model.ImageModel
 
 class App {
   companion object {
@@ -45,6 +48,21 @@ class App {
   }
 
   @Composable
+  private fun showSrcImagesInLazyColumn() {
+    val mSrcImagesList: ArrayList<ImageModel> by remember { appViewModel.mutableStateOfSrcImagesList }
+    LazyColumn {
+      items(mSrcImagesList) { mSrcImage ->
+        showSrcImageRow(mSrcImage)
+      }
+    }
+  }
+
+  @Composable
+  private fun showSrcImageRow(mImage: ImageModel) {
+    Text(text = mImage.imageUrl)
+  }
+
+  @Composable
   private fun column0Source() {
     Column(modifier =
       Modifier.padding(8.dp)
@@ -52,9 +70,10 @@ class App {
         .fillMaxWidth(0.3f)
         .background(color = MyColors.neutral200)
     ) {
-     Text("Source")
-     Text("Ricardo Milos")
+      Text("Source")
+      Text("Ricardo Milos")
       enterSourceImageUrl()
+      showSrcImagesInLazyColumn()
     }
   }
 

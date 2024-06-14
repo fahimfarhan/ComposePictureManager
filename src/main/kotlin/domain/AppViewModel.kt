@@ -3,8 +3,12 @@ package domain
 import androidx.compose.runtime.*
 import data.SourceRepository
 import data.TargetRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import model.ImageModel
 
 class AppViewModel {
   companion object {
@@ -16,9 +20,21 @@ class AppViewModel {
   var mutableSrcImgUrl: MutableState<String> = mutableStateOf("")
   var mFlow = MutableStateFlow("")
 
+  val mutableStateOfSrcImagesList: MutableState<ArrayList<ImageModel>> = mutableStateOf(ArrayList())
 
-  private val srcRepo by lazy {   SourceRepository()  }
-  private val targetRepo by lazy {    TargetRepository()  }
+
+  val srcRepo by lazy {   SourceRepository()  }
+  val targetRepo by lazy {    TargetRepository()  }
+
+  init {
+    initObservers()
+  }
+
+  private fun initObservers() {
+    srcRepo.rxObservableImageModelsList.subscribe { latestList ->
+      mutableStateOfSrcImagesList.value = latestList
+    }
+  }
 
   fun onRightArrowsClickMoveImagesFromSourceToTarget() {
     val selectedImagesFromSource = srcRepo.getSelectedImages()
