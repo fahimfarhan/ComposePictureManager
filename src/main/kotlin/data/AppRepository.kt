@@ -34,9 +34,9 @@ open class AppRepository(
 
     for(i in (rxImageModelsList.size - 1) downTo  0) {
       val someImage = rxImageModelsList.get(i)
-      if(someImage.isSelected) {
-        rxImageModelsList.removeAt(i) // inefficient cz too many update ==> too many new ArrayList object allocation!
-        someImage.isSelected = false
+      if(someImage.isSelectedMutableState.value) {
+//        rxImageModelsList.removeAt(i) // inefficient cz too many update ==> too many new ArrayList object allocation!
+        someImage.isSelectedMutableState.value = false
         mList.add(index = 0, element = someImage)
       }
     }
@@ -57,6 +57,10 @@ open class AppRepository(
 
   fun addImagesFromSrcDir(srcDir: String) {
 
+  }
+
+  fun printCurrentList(tag: String = "AppRepo") {
+    println("$tag : ${rxImageModelsList.getValue()}")
   }
 
 }

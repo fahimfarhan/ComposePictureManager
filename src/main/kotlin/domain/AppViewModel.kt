@@ -42,13 +42,25 @@ class AppViewModel {
   }
 
   fun onRightArrowsClickMoveImagesFromSourceToTarget() {
+    srcRepo.printCurrentList(tag = "before: srcRepo")
+    targetRepo.printCurrentList(tag = "before: targetRepo")
     val selectedImagesFromSource = srcRepo.getSelectedImages()
+    println("selectedImagedFromSrc: $selectedImagesFromSource")
     targetRepo.saveSelectedImages(selectedImagesFromSource)
+
+        srcRepo.printCurrentList(tag = "after: srcRepo")
+    targetRepo.printCurrentList(tag = "after: targetRepo")
+
   }
 
   fun onLeftArrowsClickMoveImagesFromTargetToSource() {
+    srcRepo.printCurrentList(tag = "before: srcRepo")
+    targetRepo.printCurrentList(tag = "before: targetRepo")
     val selectedImagesFromTarget = targetRepo.getSelectedImages()
+        println("selectedImagedFromTarget: $selectedImagesFromTarget")
     srcRepo.saveSelectedImages(selectedImagesFromTarget)
+        srcRepo.printCurrentList(tag = "after: srcRepo")
+    targetRepo.printCurrentList(tag = "after: targetRepo")
   }
 
   fun addSrcImgUrl() {

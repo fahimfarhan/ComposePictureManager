@@ -2,6 +2,7 @@ package ui
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -47,22 +48,16 @@ class App {
     }
   }
 
-  @Composable
-  private fun showSrcImagesInLazyColumn() {
-    val mSrcImagesList: ArrayList<ImageModel> by remember { appViewModel.mutableStateOfSrcImagesList }
-    LazyColumn {
-      items(mSrcImagesList) { mSrcImage ->
-        showImageModelRow(mSrcImage)
-      }
-    }
-  }
 
-    @Composable
-  private fun showTargetImagesInLazyColumn() {
-    val mTargetImagesList: ArrayList<ImageModel> by remember { appViewModel.mutableStateOfTargetImagesList }
+  @Composable
+  private fun showImagesInLazyColumn(someMutableState: MutableState<ArrayList<ImageModel>>) {
+    val mImagesList: ArrayList<ImageModel> by remember { someMutableState }
     LazyColumn {
-      items(mTargetImagesList) { mTargetImage ->
-        showImageModelRow(mTargetImage)
+      items(
+        mImagesList,
+        key = { mImg -> mImg.key }
+      ) { mSrcImage ->
+        showImageModelRow(mSrcImage)
       }
     }
   }
@@ -70,7 +65,10 @@ class App {
 
   @Composable
   private fun showImageModelRow(mImage: ImageModel) {
-    Text(text = mImage.imageUrl)
+    var isSelected by remember { mImage.isSelectedMutableState }
+    Text(text = mImage.imageUrl, Modifier.clickable {
+      isSelected = !isSelected
+    }.background( if(isSelected) MyColors.orange500 else MyColors.neutral200 ).padding(4.dp) )
   }
 
   @Composable
@@ -84,7 +82,7 @@ class App {
       Text("Source")
       Text("Ricardo Milos")
       enterSourceImageUrl()
-      showSrcImagesInLazyColumn()
+      showImagesInLazyColumn(appViewModel.mutableStateOfSrcImagesList)
     }
   }
 
@@ -122,7 +120,7 @@ class App {
       .background(color = MyColors.neutral200)
     ) {
       Text("target")
-      showTargetImagesInLazyColumn()
+      showImagesInLazyColumn(appViewModel.mutableStateOfTargetImagesList)
     }
   }
 
