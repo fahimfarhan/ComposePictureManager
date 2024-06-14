@@ -1,6 +1,8 @@
 package data
 
 import androidx.compose.runtime.MutableState
+import extensions.RxPubSub
+import extensions.RxPubSubList
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableSource
 import io.reactivex.rxjava3.core.Observer
@@ -22,36 +24,35 @@ open class AppRepository(
     const val TAG = "AppRepository"
   }
 
+  private val rxImageModelsList: RxPubSubList<ImageModel> = RxPubSubList<ImageModel>(ArrayList())
 
+  val rxObservableImageModelsList: Observable<ArrayList<ImageModel>> get() = rxImageModelsList.rxObservableData
 
-//  val stateFLowOfImageModelsList: MutableStateFlow<ArrayList<ImageModel>> = MutableStateFlow(ArrayList())
-  val imageModelsList: ArrayList<ImageModel> = ArrayList()
-  private val rxImageModelsList: PublishSubject<ArrayList<ImageModel>> = PublishSubject.create() // Subject.fromIterable(imageModelsList)
-  val rxObservableImageModelsList get() = rxImageModelsList.hide()
 
   open fun getSelectedImages(): ArrayList<ImageModel> {
     val mList = ArrayList<ImageModel>()
 
-    for(i in (imageModelsList.size - 1) downTo  0) {
-      val someImage = imageModelsList[i]
+    for(i in (rxImageModelsList.size - 1) downTo  0) {
+      val someImage = rxImageModelsList.get(i)
       if(someImage.isSelected) {
-        imageModelsList.removeAt(i)
+        rxImageModelsList.removeAt(i) // inefficient cz too many update ==> too many new ArrayList object allocation!
         someImage.isSelected = false
         mList.add(index = 0, element = someImage)
       }
     }
-
+    rxImageModelsList.removeAll(mList)
     return mList
   }
 
   fun saveSelectedImages(selectedImages: ArrayList<ImageModel>) {
-    imageModelsList.addAll(selectedImages)
+    rxImageModelsList.addAll(selectedImages)
+//    rxImageModelsList.updateData()
   }
 
   fun addImages(srcImgUrl: String) {
     // val tmp = ArrayList(imageModelsList)
-    imageModelsList.add(ImageModel(imageUrl = srcImgUrl))
-    rxImageModelsList.onNext(ArrayList(imageModelsList))
+    rxImageModelsList.add(ImageModel(imageUrl = srcImgUrl))
+//    rxImageModelsList.updateData() // onNext(ArrayList(imageModelsList))
   }
 
   fun addImagesFromSrcDir(srcDir: String) {
