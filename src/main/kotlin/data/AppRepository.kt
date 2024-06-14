@@ -27,4 +27,13 @@ open class AppRepository {
   fun saveSelectedImages(selectedImages: ArrayList<ImageModel>) {
     imageModelsList.addAll(selectedImages)
   }
+
+  fun addImages(srcImgUrl: String) {
+    imageModelsList.add(ImageModel(imageUrl = srcImgUrl))
+  }
+
+  fun addImagesFromSrcDir(srcDir: String) {
+
+  }
+
 }

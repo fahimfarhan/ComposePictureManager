@@ -23,15 +23,25 @@ class App {
 
 
   @Composable
-  fun simpleOutlinedTextFieldSample() {
-    var text: String by remember { mutableStateOf("") }
+  fun enterSourceImageUrl() {
+    Row(modifier = Modifier.fillMaxWidth(1f)) {
 
-    OutlinedTextField(
-      value = text,
-      onValueChange = { text = it },
-      label = { Text("Image Url") },
-      maxLines = 1
-    )
+      var srcImgUrl by remember { appViewModel.mutableSrcImgUrl }
+      OutlinedTextField(
+        modifier = Modifier.fillMaxWidth(0.8f),
+        value = srcImgUrl,
+        onValueChange = { srcImgUrl = it },
+        label = { Text("Enter Image Url") },
+        maxLines = 1
+      )
+
+      Button(onClick = {
+        appViewModel.addSrcImgUrl()
+        srcImgUrl = ""
+      }, modifier = Modifier.background(color = MyColors.blue500)) {
+        Text("Add")
+      }
+    }
   }
 
   @Composable
@@ -44,7 +54,7 @@ class App {
     ) {
      Text("Source")
      Text("Ricardo Milos")
-      simpleOutlinedTextFieldSample()
+      enterSourceImageUrl()
     }
   }
 
@@ -56,7 +66,20 @@ class App {
       .fillMaxWidth( (0.05f/0.7f) )
       .background(color = MyColors.neutral200)
     ) {
-     Text("Arrows")
+     // Text("Arrows")
+      Button(onClick = {
+        appViewModel.onRightArrowsClickMoveImagesFromSourceToTarget()
+      }, modifier = Modifier.padding(top = 100.dp)
+
+      ) {
+        Text(">>>")
+      }
+
+      Button(onClick = {
+        appViewModel.onLeftArrowsClickMoveImagesFromTargetToSource()
+      }) {
+        Text("<<<")
+      }
     }
   }
 
