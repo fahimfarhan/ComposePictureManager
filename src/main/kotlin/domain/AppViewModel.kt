@@ -21,6 +21,7 @@ class AppViewModel {
   var mFlow = MutableStateFlow("")
 
   val mutableStateOfSrcImagesList: MutableState<ArrayList<ImageModel>> = mutableStateOf(ArrayList())
+  val mutableStateOfTargetImagesList: MutableState<ArrayList<ImageModel>> = mutableStateOf(ArrayList())
 
 
   val srcRepo by lazy {   SourceRepository()  }
@@ -33,6 +34,10 @@ class AppViewModel {
   private fun initObservers() {
     srcRepo.rxObservableImageModelsList.subscribe { latestList ->
       mutableStateOfSrcImagesList.value = latestList
+    }
+
+    targetRepo.rxObservableImageModelsList.subscribe { latestList ->
+      mutableStateOfTargetImagesList.value = latestList
     }
   }
 

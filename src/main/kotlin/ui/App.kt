@@ -52,13 +52,24 @@ class App {
     val mSrcImagesList: ArrayList<ImageModel> by remember { appViewModel.mutableStateOfSrcImagesList }
     LazyColumn {
       items(mSrcImagesList) { mSrcImage ->
-        showSrcImageRow(mSrcImage)
+        showImageModelRow(mSrcImage)
       }
     }
   }
 
+    @Composable
+  private fun showTargetImagesInLazyColumn() {
+    val mTargetImagesList: ArrayList<ImageModel> by remember { appViewModel.mutableStateOfTargetImagesList }
+    LazyColumn {
+      items(mTargetImagesList) { mTargetImage ->
+        showImageModelRow(mTargetImage)
+      }
+    }
+  }
+
+
   @Composable
-  private fun showSrcImageRow(mImage: ImageModel) {
+  private fun showImageModelRow(mImage: ImageModel) {
     Text(text = mImage.imageUrl)
   }
 
@@ -110,7 +121,8 @@ class App {
       .fillMaxWidth((0.3f/0.65f) )
       .background(color = MyColors.neutral200)
     ) {
-     Text("target")
+      Text("target")
+      showTargetImagesInLazyColumn()
     }
   }
 
