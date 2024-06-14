@@ -1,21 +1,9 @@
 package data
 
-import androidx.compose.runtime.MutableState
-import extensions.RxPubSub
 import extensions.RxPubSubList
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.ObservableSource
-import io.reactivex.rxjava3.core.Observer
-import io.reactivex.rxjava3.kotlin.Observables
-import io.reactivex.rxjava3.kotlin.toObservable
-import io.reactivex.rxjava3.kotlin.withLatestFrom
-import io.reactivex.rxjava3.subjects.PublishSubject
-import io.reactivex.rxjava3.subjects.Subject
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
 import model.ImageModel
+import java.io.File
 
 open class AppRepository(
 //  private val mainScope: CoroutineScope = MainScope()
@@ -49,14 +37,17 @@ open class AppRepository(
 //    rxImageModelsList.updateData()
   }
 
-  fun addImages(srcImgUrl: String) {
+  fun addImage(srcImgUrl: String) {
     // val tmp = ArrayList(imageModelsList)
     rxImageModelsList.add(ImageModel(imageUrl = srcImgUrl))
 //    rxImageModelsList.updateData() // onNext(ArrayList(imageModelsList))
   }
 
-  fun addImagesFromSrcDir(srcDir: String) {
-
+  fun addImagesFromSrcDir(srcImages: ArrayList<File>) {
+    val mList = srcImages.stream()
+      .map { srcImgFile -> ImageModel(imageUrl = srcImgFile.absolutePath) }
+      .toList()
+    rxImageModelsList.addAll(mList)
   }
 
   fun printCurrentList(tag: String = "AppRepo") {

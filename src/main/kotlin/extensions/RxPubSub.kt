@@ -40,7 +40,7 @@ open class RxPubSubList<T>(data: ArrayList<T>): RxPubSub<ArrayList<T>>(data) {
     updateData(tmp)
   }
 
-  fun addAll(someList: ArrayList<T>) {
+  fun addAll(someList: List<T>) {
     val tmp = ArrayList(super.data)
     tmp.addAll(someList)
     updateData(tmp)

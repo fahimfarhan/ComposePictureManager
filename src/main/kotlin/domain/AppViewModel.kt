@@ -67,15 +67,18 @@ class AppViewModel {
 
   fun addSrcImgUrl() {
     val srcImgUrl = mutableSrcImgUrl.value
-    srcRepo.addImages(srcImgUrl)
+    srcRepo.addImage(srcImgUrl)
   }
 
   fun addAllImagesFromSrcDir() {
     val mSrcDir = srcImageDirState.value
     val mListOfImages = listFilesForFolder(File(mSrcDir))
-    for(i in mListOfImages) {
-      println(i.absolutePath)
-    }
+//    for(i in mListOfImages) {
+//      println(i.absolutePath)
+//    }
+
+    srcRepo.addImagesFromSrcDir(mListOfImages)
+
   }
 
   fun isImageFile(str: String?): Boolean {
