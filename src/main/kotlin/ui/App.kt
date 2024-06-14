@@ -105,7 +105,7 @@ class App {
   private fun showImageModelRow(mImage: ImageModel) {
     // data
     var isSelected by remember { mImage.isSelectedMutableState }
-
+    var imgBitmap: ImageBitmap? by remember { mImage.stateImageBitmap }
     // ui
     Row(modifier = Modifier.fillMaxWidth().padding(8.dp).background(color = MyColors.red500).clickable {
         isSelected = !isSelected
@@ -114,7 +114,7 @@ class App {
       // Image()
 
       Image(
-        bitmap = mImage.imageBitmap?:defaultPlaceHolderImageBitmap,
+        bitmap = imgBitmap?: defaultPlaceHolderImageBitmap, // mImage.imageBitmap?:defaultPlaceHolderImageBitmap,
         contentDescription = mImage.imageUrl,
         modifier = Modifier.width(100.dp)
       )

@@ -1,13 +1,17 @@
 package extensions
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.toComposeImageBitmap
 import java.io.File
 import java.net.URL
+import java.util.concurrent.Executors
 import javax.imageio.ImageIO
 
 
 object ImageLoaderExtensions {
+
+  val mExecutor = Executors.newCachedThreadPool()
 
   fun isDirectory(imgUrl: String): Boolean {
     val file = File(imgUrl)
@@ -67,7 +71,14 @@ object ImageLoaderExtensions {
      }
   }
 
-   fun createImageBitmap(imgUrl: String): ImageBitmap? {
+  fun createImageBitmapAsync(imgUrl: String, stateImageBitmap: MutableState<ImageBitmap?>) {
+    mExecutor.execute {
+      val mBitmap = createImageBitmap(imgUrl)
+      stateImageBitmap.value = mBitmap
+    }
+  }
+
+   private fun createImageBitmap(imgUrl: String): ImageBitmap? {
      return try {
        if(isFile(imgUrl)) {
          createImageBitmapFromLocalFile(imgUrl)
