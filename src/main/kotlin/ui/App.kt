@@ -1,6 +1,7 @@
 package ui
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -65,10 +66,19 @@ class App {
 
   @Composable
   private fun showImageModelRow(mImage: ImageModel) {
+    // data
     var isSelected by remember { mImage.isSelectedMutableState }
-    Text(text = mImage.imageUrl, Modifier.clickable {
-      isSelected = !isSelected
-    }.background( if(isSelected) MyColors.orange500 else MyColors.neutral200 ).padding(4.dp) )
+
+    // ui
+    Row(modifier = Modifier.fillMaxWidth().padding(8.dp).background(color = MyColors.red500)) {
+
+      // Image()
+
+      Text(text = mImage.imageUrl, Modifier.padding(4.dp).fillMaxWidth().clickable {
+        isSelected = !isSelected
+      }.background( if(isSelected) MyColors.orange500 else MyColors.neutral200 ) )
+    }
+
   }
 
   @Composable
