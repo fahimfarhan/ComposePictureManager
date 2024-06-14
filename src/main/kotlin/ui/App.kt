@@ -14,8 +14,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.unit.dp
 import domain.AppViewModel
+import extensions.ImageLoaderExtensions.defaultPlaceHolderImageBitmap
+import extensions.ImageLoaderExtensions.isFileOrIsValidUrl
 import model.ImageModel
 
 class App {
@@ -41,6 +44,11 @@ class App {
       )
 
       Button(onClick = {
+        if(!isFileOrIsValidUrl(srcImgUrl)) {
+          println("not a valid file or url $srcImgUrl, returning!")
+          return@Button
+        }
+
         appViewModel.addSrcImgUrl()
         srcImgUrl = ""
       }, modifier = Modifier.background(color = MyColors.blue500)) {
@@ -70,13 +78,20 @@ class App {
     var isSelected by remember { mImage.isSelectedMutableState }
 
     // ui
-    Row(modifier = Modifier.fillMaxWidth().padding(8.dp).background(color = MyColors.red500)) {
+    Row(modifier = Modifier.fillMaxWidth().padding(8.dp).background(color = MyColors.red500).clickable {
+        isSelected = !isSelected
+      }) {
 
       // Image()
 
-      Text(text = mImage.imageUrl, Modifier.padding(4.dp).fillMaxWidth().clickable {
-        isSelected = !isSelected
-      }.background( if(isSelected) MyColors.orange500 else MyColors.neutral200 ) )
+      Image(
+        bitmap = mImage.imageBitmap?:defaultPlaceHolderImageBitmap,
+        contentDescription = mImage.imageUrl,
+        modifier = Modifier.width(100.dp)
+      )
+
+      Text(text = mImage.imageUrl, Modifier.padding(4.dp).fillMaxWidth()
+        .background( if(isSelected) MyColors.orange500 else MyColors.neutral200 ) )
     }
 
   }
