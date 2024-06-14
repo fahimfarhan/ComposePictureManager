@@ -1,14 +1,15 @@
 package domain
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import data.SourceRepository
 import data.TargetRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import model.ImageModel
+import java.io.File
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
 
 class AppViewModel {
   companion object {
@@ -18,7 +19,8 @@ class AppViewModel {
   private val viewModelScope = MainScope()
 //    var sourceImageUrl: String by remember { mutableStateOf("") }
   var mutableSrcImgUrl: MutableState<String> = mutableStateOf("")
-  var mFlow = MutableStateFlow("")
+
+  val srcImageDirState: MutableState<String> = mutableStateOf("")
 
   val mutableStateOfSrcImagesList: MutableState<ArrayList<ImageModel>> = mutableStateOf(ArrayList())
   val mutableStateOfTargetImagesList: MutableState<ArrayList<ImageModel>> = mutableStateOf(ArrayList())
@@ -66,6 +68,60 @@ class AppViewModel {
   fun addSrcImgUrl() {
     val srcImgUrl = mutableSrcImgUrl.value
     srcRepo.addImages(srcImgUrl)
+  }
+
+  fun addAllImagesFromSrcDir() {
+    val mSrcDir = srcImageDirState.value
+    val mListOfImages = listFilesForFolder(File(mSrcDir))
+    for(i in mListOfImages) {
+      println(i.absolutePath)
+    }
+  }
+
+  fun isImageFile(str: String?): Boolean {
+    // Regex to check valid image file extension.
+    val regex = "(\\S+(\\.(?i)(jpe?g|png|gif|bmp))$)"
+
+
+    // Compile the ReGex
+    val p: Pattern = Pattern.compile(regex)
+
+
+    // If the string is empty
+    // return false
+    if (str == null) {
+      return false
+    }
+
+
+    // Pattern class contains matcher() method
+    // to find matching between given string
+    // and regular expression.
+    val m: Matcher = p.matcher(str)
+
+
+    // Return if the string
+    // matched the ReGex
+    return m.matches()
+  }
+
+  private fun listFilesForFolder(folder: File): ArrayList<File> {
+    val output = ArrayList<File>()
+    val mFiles =  folder.listFiles()
+    var mSize = mFiles?.size?:0
+    for (i in 0 until mSize ) {
+      val fileEntry = mFiles!![i]
+      if (fileEntry.isDirectory) {
+        val tmp = listFilesForFolder(fileEntry)
+        output.addAll(tmp)
+      } else {
+        // println(fileEntry.name)
+        if(isImageFile(fileEntry.absolutePath)) {
+          output.add(fileEntry)
+        }
+      }
+    }
+    return output
   }
 
 }

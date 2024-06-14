@@ -9,6 +9,17 @@ import javax.imageio.ImageIO
 
 object ImageLoaderExtensions {
 
+  fun isDirectory(imgUrl: String): Boolean {
+    val file = File(imgUrl)
+    if(!file.exists()) {
+      return false
+    }
+    if(!file.isDirectory) {
+      return false
+    }
+    return true
+  }
+
   fun isFile(imgUrl: String): Boolean {
     val file = File(imgUrl)
     if(!file.exists()) {

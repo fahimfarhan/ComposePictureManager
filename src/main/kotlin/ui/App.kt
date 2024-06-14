@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.unit.dp
 import domain.AppViewModel
 import extensions.ImageLoaderExtensions.defaultPlaceHolderImageBitmap
+import extensions.ImageLoaderExtensions.isDirectory
 import extensions.ImageLoaderExtensions.isFileOrIsValidUrl
 import model.ImageModel
 
@@ -54,6 +55,34 @@ class App {
       }, modifier = Modifier.background(color = MyColors.blue500)) {
         Text("Add")
       }
+    }
+  }
+
+  @Composable
+  fun enterSourceFolder() {
+    Row(modifier = Modifier.fillMaxWidth(1f)) {
+      var mSrcDir by remember { appViewModel.srcImageDirState }
+
+      OutlinedTextField(
+        modifier = Modifier.fillMaxWidth(0.8f),
+        value = mSrcDir,
+        onValueChange = { mSrcDir = it },
+        label = { Text("Enter source directory") },
+//        maxLines = 1
+      )
+
+       Button(onClick = {
+        if(!isDirectory(mSrcDir)) {
+          println("not a valid directory $mSrcDir, returning!")
+          return@Button
+        }
+
+        appViewModel.addAllImagesFromSrcDir()
+
+      }, modifier = Modifier.background(color = MyColors.blue500)) {
+        Text("Add")
+      }
+
     }
   }
 
@@ -107,6 +136,7 @@ class App {
       Text("Source")
       Text("Ricardo Milos")
       enterSourceImageUrl()
+      enterSourceFolder()
       showImagesInLazyColumn(appViewModel.mutableStateOfSrcImagesList)
     }
   }
