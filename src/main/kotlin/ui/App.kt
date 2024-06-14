@@ -15,10 +15,12 @@ import domain.AppViewModel
 
 class App {
   companion object {
-    const val TAG = "APP"
+    const val TAG = "App"
   }
 
   private val appViewModel by lazy { AppViewModel() }
+
+
 
   @Composable
   fun simpleOutlinedTextFieldSample() {
@@ -34,7 +36,12 @@ class App {
 
   @Composable
   private fun column0Source() {
-    Column(modifier = Modifier.padding(8.dp).fillMaxWidth(0.3f).background(color = Color.Red)) {
+    Column(modifier =
+      Modifier.padding(8.dp)
+        .fillMaxHeight()
+        .fillMaxWidth(0.3f)
+        .background(color = MyColors.neutral200)
+    ) {
      Text("Source")
      Text("Ricardo Milos")
       simpleOutlinedTextFieldSample()
@@ -43,28 +50,48 @@ class App {
 
   @Composable
   private fun column1Arrows() {
-    Column(modifier = Modifier.padding(8.dp).fillMaxWidth( (0.05f/0.7f) ).background(color = Color.Yellow)) {
+    Column(modifier = Modifier
+      .padding(8.dp)
+      .fillMaxHeight()
+      .fillMaxWidth( (0.05f/0.7f) )
+      .background(color = MyColors.neutral200)
+    ) {
      Text("Arrows")
     }
   }
 
   @Composable
   private fun column2Target() {
-    Column(modifier = Modifier.padding(8.dp).fillMaxWidth((0.3f/0.65f) ).background(color = Color.Red)) {
+    Column(modifier = Modifier
+      .padding(8.dp)
+      .fillMaxHeight()
+      .fillMaxWidth((0.3f/0.65f) )
+      .background(color = MyColors.neutral200)
+    ) {
      Text("target")
     }
   }
 
   @Composable
   private fun column3Arrows() {
-    Column(modifier = Modifier.padding(8.dp).fillMaxWidth((0.05f/0.35f) ).background(color = Color.Yellow)) {
+    Column(modifier = Modifier
+      .padding(8.dp)
+      .fillMaxHeight()
+      .fillMaxWidth((0.05f/0.35f) )
+      .background(color = MyColors.neutral200)
+    ) {
      Text("Arrows")
     }
   }
 
   @Composable
   private fun column4Categories() {
-    Column(modifier = Modifier.padding(8.dp).fillMaxWidth((0.3f / 0.3f) ).background(color = Color.Red)) {
+    Column(modifier = Modifier
+      .padding(8.dp)
+      .fillMaxHeight()
+      .fillMaxWidth((0.3f / 0.3f) )
+      .background(color = MyColors.neutral200)
+    ) {
      Text("categories")
     }
   }
@@ -72,7 +99,7 @@ class App {
 
   @Composable
   fun appHome() {
-    Row (modifier = Modifier.padding(16.dp).fillMaxWidth().background(color = Color.Cyan)) {
+    Row (modifier = Modifier.fillMaxSize().background(color = Color.White)) {
       column0Source()
       column1Arrows()
       column2Target()
