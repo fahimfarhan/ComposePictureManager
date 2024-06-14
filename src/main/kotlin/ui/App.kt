@@ -40,7 +40,7 @@ class App {
         value = srcImgUrl,
         onValueChange = { srcImgUrl = it },
         label = { Text("Enter Image Url") },
-        maxLines = 1
+//        maxLines = 1
       )
 
       Button(onClick = {
