@@ -7,10 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,6 +19,7 @@ import extensions.ImageLoaderExtensions.isDirectory
 import extensions.ImageLoaderExtensions.isFileOrIsValidUrl
 import model.Category
 import model.ImageModel
+import java.lang.module.ModuleFinder
 
 class App {
   companion object {
@@ -200,7 +198,16 @@ class App {
   @Composable
   fun showSubCategoriesInNestedLazyColumn(category: Category) {
     for(subCategory in category.subCategories) {
-      Text(text = subCategory)
+      Row(modifier = Modifier.fillMaxWidth()) {
+        Text(text = subCategory, modifier = Modifier.fillMaxWidth(0.8f))
+        Button(onClick = {
+          appViewModel.deleteSubCategory(category, subCategory)
+        },
+          modifier = Modifier.fillMaxWidth()
+        ) {
+          Text("X")
+        }
+      }
     }
   }
 

@@ -152,4 +152,8 @@ class AppViewModel {
     categoryRepo.removeCategory(category)
   }
 
+  fun deleteSubCategory(category: Category, subCategory: String) {
+    categoryRepo.removeSubCategory(category, subCategory)
+  }
+
 }

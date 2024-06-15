@@ -100,6 +100,7 @@ class CategoryRepository {
     val mList = rxListOfCategories.getValue()
     if(!mList.contains(categoryReference)) {
       println("Category reference does not exist in currentList! catRef: $categoryReference, currentList: $mList")
+      return
     }
     if(categoryReference.subCategories.contains(subCategory)) {
       println("Same subCategory already exists. return...")
@@ -114,6 +115,9 @@ class CategoryRepository {
   }
 
   fun removeSubCategory(categoryReference: Category, subCategory: String) {
+    if(!categoryReference.subCategories.contains(subCategory)) {
+      return
+    }
     categoryReference.subCategories.remove(subCategory)
     rxListOfCategories.updateData(rxListOfCategories.getValue())
   }
