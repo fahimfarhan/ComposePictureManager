@@ -50,8 +50,9 @@ class AppViewModel {
     }
 
     categoryRepo.rxObservableListOfCategories.subscribe { latestList ->
+      mutableStateOfCategoriesList.value = ArrayList() // triggers to clear the ui
       println("AppVm->initObservers->observableCategoriesList-> latestList: $latestList")
-      mutableStateOfCategoriesList.value = latestList
+      mutableStateOfCategoriesList.value = latestList  // triggers to redraw with actual data
     }
   }
 
@@ -141,6 +142,10 @@ class AppViewModel {
 
   fun createNewCategory(categoryName: String) {
     categoryRepo.addCategory(categoryName)
+  }
+
+  fun createNewSubCategory(parentCategory: Category, subCategory: String) {
+    categoryRepo.addSubCategory(parentCategory, subCategory)
   }
 
 }

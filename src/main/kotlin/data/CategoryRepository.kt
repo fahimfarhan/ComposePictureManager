@@ -101,6 +101,10 @@ class CategoryRepository {
     if(!mList.contains(categoryReference)) {
       println("Category reference does not exist in currentList! catRef: $categoryReference, currentList: $mList")
     }
+    if(categoryReference.subCategories.contains(subCategory)) {
+      println("Same subCategory already exists. return...")
+      return
+    }
     categoryReference.subCategories.add(subCategory)
     rxListOfCategories.updateData(mList)
   }

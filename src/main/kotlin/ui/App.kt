@@ -127,7 +127,7 @@ class App {
         value = mCategory,
         onValueChange = { mCategory = it },
         label = { Text("Enter New Category") },
-//        maxLines = 1
+        maxLines = 1
       )
 
       Button(onClick = {
@@ -158,6 +158,65 @@ class App {
   @Composable
   fun showCategoryRow(category: Category) {
     Text(text = category.name)
+    // edittext for subcategory
+    addSubCategory(category)
+    // rv of subCategories
+    showSubCategoriesInNestedLazyColumn(category)
+  }
+
+      @Composable
+  fun addSubCategory(parentCategory: Category) {
+    Row(modifier = Modifier.fillMaxWidth(1f)) {
+      var mSubCategory by remember { mutableStateOf("") }
+
+      OutlinedTextField(
+        modifier = Modifier.fillMaxWidth(0.8f),
+        value = mSubCategory,
+        onValueChange = { mSubCategory = it },
+        label = { Text("New Sub Category") },
+        maxLines = 1
+      )
+
+      Button(onClick = {
+        println("Entered sub category: $mSubCategory")
+        val copySubCategory = StringBuilder(mSubCategory).toString()
+        appViewModel.createNewSubCategory(parentCategory, copySubCategory)
+        mSubCategory = ""
+      }, modifier = Modifier.background(color = MyColors.blue500)) {
+        Text("Add Sub Category")
+      }
+
+    }
+  }
+
+  @Composable
+  fun showSubCategoriesInNestedLazyColumn(category: Category) {
+    for(subCategory in category.subCategories) {
+      Text(text = subCategory)
+    }
+  }
+
+  /*
+  @Composable
+  fun showSubCategoriesInNestedLazyColumnFailed(parentCategory: Category) {
+    val mSubCategories by remember { parentCategory.mutableStateOfSubCategories }
+    if(mSubCategories.isNullOrEmpty()) {
+      return
+    }
+    LazyColumn(modifier = Modifier.height(100.dp)) {
+      items(
+        mSubCategories?:ArrayList(),
+        key = { subCategory -> subCategory }
+      ) { mSubCategory ->
+        showSubCategoryRow(parentCategory, mSubCategory)
+      }
+    }
+  }
+  */
+
+  @Composable
+  fun showSubCategoryRow(parentCategory: Category, subCategory: String) {
+    Text(text = subCategory)
   }
 
   @Composable
