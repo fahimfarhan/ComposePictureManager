@@ -87,6 +87,57 @@ class App {
   }
 
 
+
+  @Composable
+  fun enterTargetFolder() {
+    Row(modifier = Modifier.fillMaxWidth(1f)) {
+      var mTargetDir by remember { appViewModel.targetImageDirState }
+
+      OutlinedTextField(
+        modifier = Modifier.fillMaxWidth(0.8f),
+        value = mTargetDir,
+        onValueChange = { mTargetDir = it },
+        label = { Text("Enter target directory") },
+//        maxLines = 1
+      )
+
+       /*Button(onClick = {
+        if(!isDirectory(mTargetDir)) {
+          println("not a valid directory $mTargetDir, returning!")
+          return@Button
+        }
+
+        appViewModel.addAllImagesFromSrcDir()
+
+      }, modifier = Modifier.background(color = MyColors.blue500)) {
+        Text("Add")
+      }*/
+
+    }
+  }
+
+    @Composable
+  fun addCategory() {
+    Row(modifier = Modifier.fillMaxWidth(1f)) {
+      var mCategory by remember { appViewModel.categoryState }
+
+      OutlinedTextField(
+        modifier = Modifier.fillMaxWidth(0.8f),
+        value = mCategory,
+        onValueChange = { mCategory = it },
+        label = { Text("Enter New Category") },
+//        maxLines = 1
+      )
+
+      Button(onClick = {
+        println("Entered category: $mCategory")
+      }, modifier = Modifier.background(color = MyColors.blue500)) {
+        Text("Add Category")
+      }
+
+    }
+  }
+
   @Composable
   private fun showImagesInLazyColumn(someMutableState: MutableState<ArrayList<ImageModel>>) {
     val mImagesList: ArrayList<ImageModel> by remember { someMutableState }
@@ -133,8 +184,7 @@ class App {
         .fillMaxWidth(0.3f)
         .background(color = MyColors.neutral200)
     ) {
-      Text("Source")
-      Text("Ricardo Milos")
+      Text("Source", modifier = Modifier.padding(16.dp).background(color = MyColors.red500))
       enterSourceImageUrl()
       enterSourceFolder()
       showImagesInLazyColumn(appViewModel.mutableStateOfSrcImagesList)
@@ -174,7 +224,8 @@ class App {
       .fillMaxWidth((0.3f/0.65f) )
       .background(color = MyColors.neutral200)
     ) {
-      Text("target")
+      Text("Target", modifier = Modifier.padding(16.dp).background(color = MyColors.red500))
+      enterTargetFolder()
       showImagesInLazyColumn(appViewModel.mutableStateOfTargetImagesList)
     }
   }
@@ -187,7 +238,13 @@ class App {
       .fillMaxWidth((0.05f/0.35f) )
       .background(color = MyColors.neutral200)
     ) {
-     Text("Arrows")
+     Button(onClick = {
+        println("Confirm move to target destination")
+      }, modifier = Modifier.padding(top = 100.dp)
+
+      ) {
+        Text("Move Confirm")
+      }
     }
   }
 
@@ -199,7 +256,8 @@ class App {
       .fillMaxWidth((0.3f / 0.3f) )
       .background(color = MyColors.neutral200)
     ) {
-     Text("categories")
+      Text("categories")
+      addCategory()
     }
   }
 

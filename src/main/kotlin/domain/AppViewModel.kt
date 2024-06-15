@@ -21,6 +21,9 @@ class AppViewModel {
   var mutableSrcImgUrl: MutableState<String> = mutableStateOf("")
 
   val srcImageDirState: MutableState<String> = mutableStateOf("")
+  val targetImageDirState: MutableState<String> = mutableStateOf("")
+  val categoryState: MutableState<String> = mutableStateOf("")
+
 
   val mutableStateOfSrcImagesList: MutableState<ArrayList<ImageModel>> = mutableStateOf(ArrayList())
   val mutableStateOfTargetImagesList: MutableState<ArrayList<ImageModel>> = mutableStateOf(ArrayList())
