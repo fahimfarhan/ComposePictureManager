@@ -148,4 +148,8 @@ class AppViewModel {
     categoryRepo.addSubCategory(parentCategory, subCategory)
   }
 
+  fun deleteCategory(category: Category) {
+    categoryRepo.removeCategory(category)
+  }
+
 }

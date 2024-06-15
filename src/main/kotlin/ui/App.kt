@@ -157,7 +157,15 @@ class App {
 
   @Composable
   fun showCategoryRow(category: Category) {
-    Text(text = category.name)
+    Row(modifier = Modifier.fillMaxWidth()) {
+      Text(text = category.name, modifier = Modifier.fillMaxWidth(0.8f))
+      Button(onClick = {
+        appViewModel.deleteCategory(category)
+      }, modifier = Modifier.fillMaxWidth().height(32.dp).background(MyColors.red500)) {
+        Text(text = "X", modifier = Modifier.background(MyColors.red500))
+      }
+    }
+
     // edittext for subcategory
     addSubCategory(category)
     // rv of subCategories
