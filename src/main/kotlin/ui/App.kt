@@ -134,7 +134,7 @@ class App {
         appViewModel.createNewCategory(copyMCategory)
         mCategory = ""
       }, modifier = Modifier.background(color = MyColors.blue500)) {
-        Text("Add Category")
+        Text("Add")
       }
 
     }
@@ -143,7 +143,9 @@ class App {
   @Composable
   fun showCategoriesInLazyColumn() {
     val categoriesList: ArrayList<Category> by remember { appViewModel.mutableStateOfCategoriesList }
-    LazyColumn {
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
       items(
         categoriesList,
         key = { category -> category.uniqueKey }
@@ -155,17 +157,21 @@ class App {
 
   @Composable
   fun showCategoryRow(category: Category) {
+    Divider(color = MyColors.orange500, modifier = Modifier.height(16.dp))
     Row(modifier = Modifier.fillMaxWidth()) {
       Text(text = category.name, modifier = Modifier.fillMaxWidth(0.8f))
       Button(onClick = {
         appViewModel.deleteCategory(category)
-      }, modifier = Modifier.fillMaxWidth().height(32.dp).background(MyColors.red500)) {
+      }, modifier = Modifier.height(32.dp).background(MyColors.red500)) {
         Text(text = "X", modifier = Modifier.background(MyColors.red500))
       }
     }
 
     // edittext for subcategory
+    Divider(color = MyColors.blue500, modifier = Modifier.height(8.dp))
     addSubCategory(category)
+    Divider(color = MyColors.blue500, modifier = Modifier.height(8.dp))
+
     // rv of subCategories
     showSubCategoriesInNestedLazyColumn(category)
   }
@@ -189,7 +195,7 @@ class App {
         appViewModel.createNewSubCategory(parentCategory, copySubCategory)
         mSubCategory = ""
       }, modifier = Modifier.background(color = MyColors.blue500)) {
-        Text("Add Sub Category")
+        Text("Add")
       }
 
     }
@@ -199,15 +205,15 @@ class App {
   fun showSubCategoriesInNestedLazyColumn(category: Category) {
     for(subCategory in category.subCategories) {
       Row(modifier = Modifier.fillMaxWidth()) {
-        Text(text = subCategory, modifier = Modifier.fillMaxWidth(0.8f))
+        Text(text = subCategory, modifier = Modifier.fillMaxWidth(0.8f).height(32.dp).background(color = MyColors.yellow500))
         Button(onClick = {
           appViewModel.deleteSubCategory(category, subCategory)
-        },
-          modifier = Modifier.fillMaxWidth()
+        }
         ) {
           Text("X")
         }
       }
+      Divider(color = Color.Black)
     }
   }
 
