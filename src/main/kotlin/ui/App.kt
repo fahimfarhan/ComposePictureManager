@@ -38,12 +38,13 @@ class App {
       OutlinedTextField(
         modifier = Modifier.fillMaxWidth(0.8f),
         value = srcImgUrl,
-        onValueChange = { srcImgUrl = it },
+        onValueChange = { srcImgUrl = it.trim() },
         label = { Text("Enter Image Url") },
 //        maxLines = 1
       )
 
       Button(onClick = {
+        if(srcImgUrl.isBlank()) return@Button
         if(!isFileOrIsValidUrl(srcImgUrl)) {
           println("not a valid file or url $srcImgUrl, returning!")
           return@Button
@@ -65,12 +66,13 @@ class App {
       OutlinedTextField(
         modifier = Modifier.fillMaxWidth(0.8f),
         value = mSrcDir,
-        onValueChange = { mSrcDir = it },
+        onValueChange = { mSrcDir = it.trim() },
         label = { Text("Enter source directory") },
 //        maxLines = 1
       )
 
        Button(onClick = {
+         if(mSrcDir.isBlank()) return@Button
         if(!isDirectory(mSrcDir)) {
           println("not a valid directory $mSrcDir, returning!")
           return@Button
@@ -95,7 +97,7 @@ class App {
       OutlinedTextField(
         modifier = Modifier.fillMaxWidth(0.8f),
         value = mTargetDir,
-        onValueChange = { mTargetDir = it },
+        onValueChange = { mTargetDir = it.trim() },
         label = { Text("Enter target directory") },
 //        maxLines = 1
       )
@@ -123,13 +125,14 @@ class App {
       OutlinedTextField(
         modifier = Modifier.fillMaxWidth(0.8f),
         value = mCategory,
-        onValueChange = { mCategory = it },
+        onValueChange = { mCategory = it.trim() },
         label = { Text("Enter New Category") },
         maxLines = 1
       )
 
       Button(onClick = {
         println("Entered category: $mCategory")
+        if(mCategory.isBlank()) return@Button
         val copyMCategory = StringBuilder(mCategory).toString()
         appViewModel.createNewCategory(copyMCategory)
         mCategory = ""
@@ -184,13 +187,16 @@ class App {
       OutlinedTextField(
         modifier = Modifier.fillMaxWidth(0.8f),
         value = mSubCategory,
-        onValueChange = { mSubCategory = it },
+        onValueChange = { mSubCategory = it.trim() },
         label = { Text("New Sub Category") },
         maxLines = 1
       )
 
       Button(onClick = {
         println("Entered sub category: $mSubCategory")
+        if(mSubCategory.isBlank()) {
+          return@Button
+        }
         val copySubCategory = StringBuilder(mSubCategory).toString()
         appViewModel.createNewSubCategory(parentCategory, copySubCategory)
         mSubCategory = ""

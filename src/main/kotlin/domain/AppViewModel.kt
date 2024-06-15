@@ -7,14 +7,17 @@ import data.SourceRepository
 import data.TargetRepository
 import extensions.ImageLoaderExtensions.isDirectory
 import extensions.ImageLoaderExtensions.isFile
+import extensions.ImageLoaderExtensions.isValidUrl
 import kotlinx.coroutines.MainScope
 import model.Category
 import model.ImageModel
 import java.awt.Image
 import java.io.File
+import java.net.URL
 import java.util.concurrent.Executors
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+import javax.imageio.ImageIO
 
 
 class AppViewModel {
@@ -85,7 +88,7 @@ class AppViewModel {
   }
 
   fun addSrcImgUrl() {
-    val srcImgUrl = mutableSrcImgUrl.value
+    val srcImgUrl = mutableSrcImgUrl.value.trim()
     srcRepo.addImage(srcImgUrl)
   }
 
@@ -200,9 +203,21 @@ class AppViewModel {
 
     mSelectedImages.forEach { imgModel ->
       moveASingleImage(imgModel, targetCatSubCatDir)
+      saveRemoteFile(imgModel, targetCatSubCatDir)
     }
     targetRepo.removeImages(mSelectedImages)
 
+  }
+
+  private fun saveRemoteFile(imgModel: ImageModel, targetDir: File) {
+    val imgUrl = imgModel.imageUrl
+    if( !isValidUrl(imgUrl)) {
+      return
+    }
+    val targetFile = File(targetDir, "${System.currentTimeMillis()}.jpg")
+    targetFile.createNewFile()
+    val bufferedImg = ImageIO.read(URL(imgUrl))
+    ImageIO.write(bufferedImg, "jpg", targetFile)
   }
 
   private fun moveASingleImage(imgModel: ImageModel, targetDir: File) {
@@ -215,7 +230,10 @@ class AppViewModel {
     val srcFile = File(imgUrl)
     val imageName = srcFile.name
 
-    val targetFile = File(targetDir, imageName)
+    var targetFile = File(targetDir, imageName)
+    if(targetFile.exists()) {
+      targetFile = File(targetDir, "${System.currentTimeMillis()}-$imageName")
+    }
     srcFile.renameTo(targetFile)
   }
 
