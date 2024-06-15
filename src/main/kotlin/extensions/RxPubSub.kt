@@ -19,7 +19,7 @@ open class RxPubSub<T>(protected var data: T) {
 open class RxPubSubList<T>(data: ArrayList<T>): RxPubSub<ArrayList<T>>(data) {
   override fun updateData(someData: ArrayList<T>) {
     val newData = ArrayList(someData)
-    super.updateData(ArrayList(someData))
+    super.updateData(newData)
   }
 
   fun removeAt(i: Int) {
@@ -31,6 +31,12 @@ open class RxPubSubList<T>(data: ArrayList<T>): RxPubSub<ArrayList<T>>(data) {
   fun removeAll(someSubListToRemove: ArrayList<T>) {
     val tmp = ArrayList(super.data)
     tmp.removeAll(someSubListToRemove.toSet())
+    updateData(tmp)
+  }
+
+  fun remove(any: T) {
+    val tmp = ArrayList(super.data)
+    tmp.remove(any)
     updateData(tmp)
   }
 

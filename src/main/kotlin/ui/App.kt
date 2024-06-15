@@ -20,6 +20,7 @@ import domain.AppViewModel
 import extensions.ImageLoaderExtensions.defaultPlaceHolderImageBitmap
 import extensions.ImageLoaderExtensions.isDirectory
 import extensions.ImageLoaderExtensions.isFileOrIsValidUrl
+import model.Category
 import model.ImageModel
 
 class App {
@@ -131,11 +132,32 @@ class App {
 
       Button(onClick = {
         println("Entered category: $mCategory")
+        val copyMCategory = StringBuilder(mCategory).toString()
+        appViewModel.createNewCategory(copyMCategory)
+        mCategory = ""
       }, modifier = Modifier.background(color = MyColors.blue500)) {
         Text("Add Category")
       }
 
     }
+  }
+
+  @Composable
+  fun showCategoriesInLazyColumn() {
+    val categoriesList: ArrayList<Category> by remember { appViewModel.mutableStateOfCategoriesList }
+    LazyColumn {
+      items(
+        categoriesList,
+        key = { category -> category.uniqueKey }
+      ) { mCategory ->
+        showCategoryRow(mCategory)
+      }
+    }
+  }
+
+  @Composable
+  fun showCategoryRow(category: Category) {
+    Text(text = category.name)
   }
 
   @Composable
@@ -258,6 +280,7 @@ class App {
     ) {
       Text("categories")
       addCategory()
+      showCategoriesInLazyColumn()
     }
   }
 

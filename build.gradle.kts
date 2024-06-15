@@ -19,8 +19,9 @@ dependencies {
   // compose.desktop.currentOs should be used in launcher-sourceSet
   // (in a separate module for demo project and in testMain).
   // With compose.desktop.common you will also lose @Preview functionality
-  implementation(compose.desktop.currentOs)
-  implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
+  api(compose.desktop.currentOs)
+  api("io.reactivex.rxjava3:rxkotlin:3.0.1")
+  api("com.google.code.gson:gson:2.11.0")
 }
 
 compose.desktop {

@@ -2,9 +2,11 @@ package domain
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import data.CategoryRepository
 import data.SourceRepository
 import data.TargetRepository
 import kotlinx.coroutines.MainScope
+import model.Category
 import model.ImageModel
 import java.io.File
 import java.util.regex.Matcher
@@ -16,7 +18,7 @@ class AppViewModel {
     const val TAG = "AppViewModel"
   }
 
-  private val viewModelScope = MainScope()
+  // private val viewModelScope = MainScope()
 //    var sourceImageUrl: String by remember { mutableStateOf("") }
   var mutableSrcImgUrl: MutableState<String> = mutableStateOf("")
 
@@ -24,13 +26,15 @@ class AppViewModel {
   val targetImageDirState: MutableState<String> = mutableStateOf("")
   val categoryState: MutableState<String> = mutableStateOf("")
 
+  val categoryRepo by lazy { CategoryRepository() }
 
   val mutableStateOfSrcImagesList: MutableState<ArrayList<ImageModel>> = mutableStateOf(ArrayList())
   val mutableStateOfTargetImagesList: MutableState<ArrayList<ImageModel>> = mutableStateOf(ArrayList())
+  val mutableStateOfCategoriesList: MutableState<ArrayList<Category>> = mutableStateOf(categoryRepo.rxListOfCategories.getValue())
 
+  val srcRepo by lazy { SourceRepository()  }
+  val targetRepo by lazy { TargetRepository()  }
 
-  val srcRepo by lazy {   SourceRepository()  }
-  val targetRepo by lazy {    TargetRepository()  }
 
   init {
     initObservers()
@@ -43,6 +47,11 @@ class AppViewModel {
 
     targetRepo.rxObservableImageModelsList.subscribe { latestList ->
       mutableStateOfTargetImagesList.value = latestList
+    }
+
+    categoryRepo.rxObservableListOfCategories.subscribe { latestList ->
+      println("AppVm->initObservers->observableCategoriesList-> latestList: $latestList")
+      mutableStateOfCategoriesList.value = latestList
     }
   }
 
@@ -128,6 +137,10 @@ class AppViewModel {
       }
     }
     return output
+  }
+
+  fun createNewCategory(categoryName: String) {
+    categoryRepo.addCategory(categoryName)
   }
 
 }
