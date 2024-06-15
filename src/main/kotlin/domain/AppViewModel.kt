@@ -5,10 +5,14 @@ import androidx.compose.runtime.mutableStateOf
 import data.CategoryRepository
 import data.SourceRepository
 import data.TargetRepository
+import extensions.ImageLoaderExtensions.isDirectory
+import extensions.ImageLoaderExtensions.isFile
 import kotlinx.coroutines.MainScope
 import model.Category
 import model.ImageModel
+import java.awt.Image
 import java.io.File
+import java.util.concurrent.Executors
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -17,6 +21,8 @@ class AppViewModel {
   companion object {
     const val TAG = "AppViewModel"
   }
+
+  private val mExecutor = Executors.newCachedThreadPool()
 
   // private val viewModelScope = MainScope()
 //    var sourceImageUrl: String by remember { mutableStateOf("") }
@@ -154,6 +160,63 @@ class AppViewModel {
 
   fun deleteSubCategory(category: Category, subCategory: String) {
     categoryRepo.removeSubCategory(category, subCategory)
+  }
+
+  fun onSelect(category: Category, subCategory: String) {
+    println("inside onSelect-> category=${category.name}, subCategory: $subCategory, targetDir: ${targetImageDirState.value}")
+    val targetDirParent = targetImageDirState.value
+    if(!isDirectory(targetDirParent)) {
+      println("TargetDirParent $targetDirParent is invalid.")
+      return
+    }
+
+    val targetCatDir = File(targetDirParent, category.name)
+    val targetCatSubCatDir = File(targetCatDir, subCategory)
+
+    moveFilesFromSrcToTargetAsync(targetCatSubCatDir)
+
+  }
+
+  private fun moveFilesFromSrcToTargetAsync(targetDir: File) {
+    mExecutor.execute {
+      moveFilesFromSrcToTargetBlocking(targetDir)
+    }
+  }
+
+  private fun moveFilesFromSrcToTargetBlocking(targetCatSubCatDir: File) {
+    var dirExists = false
+    if(!targetCatSubCatDir.exists()) {
+      dirExists = targetCatSubCatDir.mkdirs()
+    } else {
+      dirExists = true
+    }
+
+    if(!dirExists) {
+      println("Failed to create dirs / dir does not exist!")
+      return
+    }
+
+    val mSelectedImages = targetRepo.getSelectedImages()
+
+    mSelectedImages.forEach { imgModel ->
+      moveASingleImage(imgModel, targetCatSubCatDir)
+    }
+    targetRepo.removeImages(mSelectedImages)
+
+  }
+
+  private fun moveASingleImage(imgModel: ImageModel, targetDir: File) {
+    val imgUrl = imgModel.imageUrl
+    if( !isFile(imgUrl) ) {
+      println("Invalid file! skipping $imgUrl")
+      return
+    }
+
+    val srcFile = File(imgUrl)
+    val imageName = srcFile.name
+
+    val targetFile = File(targetDir, imageName)
+    srcFile.renameTo(targetFile)
   }
 
 }

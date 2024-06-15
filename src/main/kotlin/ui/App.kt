@@ -157,18 +157,18 @@ class App {
 
   @Composable
   fun showCategoryRow(category: Category) {
-    Divider(color = MyColors.orange500, modifier = Modifier.height(16.dp))
+    Divider(color = MyColors.blue500, modifier = Modifier.height(16.dp))
     Row(modifier = Modifier.fillMaxWidth()) {
-      Text(text = category.name, modifier = Modifier.fillMaxWidth(0.8f))
+      Text(text = category.name, modifier = Modifier.fillMaxWidth(0.8f).height(32.dp).background(color = MyColors.orange500))
       Button(onClick = {
         appViewModel.deleteCategory(category)
-      }, modifier = Modifier.height(32.dp).background(MyColors.red500)) {
-        Text(text = "X", modifier = Modifier.background(MyColors.red500))
+      }, modifier = Modifier.height(32.dp)) {
+        Text(text = "X")
       }
     }
 
     // edittext for subcategory
-    Divider(color = MyColors.blue500, modifier = Modifier.height(8.dp))
+    Divider(color = Color.White, modifier = Modifier.height(8.dp))
     addSubCategory(category)
     Divider(color = MyColors.blue500, modifier = Modifier.height(8.dp))
 
@@ -205,7 +205,15 @@ class App {
   fun showSubCategoriesInNestedLazyColumn(category: Category) {
     for(subCategory in category.subCategories) {
       Row(modifier = Modifier.fillMaxWidth()) {
-        Text(text = subCategory, modifier = Modifier.fillMaxWidth(0.8f).height(32.dp).background(color = MyColors.yellow500))
+        Text(
+          text = subCategory,
+          modifier = Modifier
+            .fillMaxWidth(0.8f)
+            .height(32.dp)
+            .background(color = MyColors.yellow500).
+            clickable {
+          appViewModel.onSelect(category, subCategory)
+        })
         Button(onClick = {
           appViewModel.deleteSubCategory(category, subCategory)
         }
@@ -258,9 +266,9 @@ class App {
   private fun showImageModelRow(mImage: ImageModel) {
     // data
     var isSelected by remember { mImage.isSelectedMutableState }
-    var imgBitmap: ImageBitmap? by remember { mImage.stateImageBitmap }
+    val imgBitmap: ImageBitmap? by remember { mImage.stateImageBitmap }
     // ui
-    Row(modifier = Modifier.fillMaxWidth().padding(8.dp).background(color = MyColors.red500).clickable {
+    Row(modifier = Modifier.fillMaxWidth().padding(8.dp).background(color = MyColors.yellow500).clickable {
         isSelected = !isSelected
       }) {
 
@@ -272,7 +280,7 @@ class App {
         modifier = Modifier.width(100.dp)
       )
 
-      Text(text = mImage.imageUrl, Modifier.padding(4.dp).fillMaxWidth()
+      Text(text = mImage.imageUrl, Modifier.padding(4.dp).fillMaxWidth().fillMaxHeight()
         .background( if(isSelected) MyColors.orange500 else MyColors.neutral200 ) )
     }
 
@@ -371,7 +379,7 @@ class App {
       column0Source()
       column1Arrows()
       column2Target()
-      column3Arrows()
+//      column3Arrows()
       column4Categories()
     }
   }

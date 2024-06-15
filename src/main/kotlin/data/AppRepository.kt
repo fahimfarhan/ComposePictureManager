@@ -54,4 +54,8 @@ open class AppRepository(
     println("$tag : ${rxImageModelsList.getValue()}")
   }
 
+  fun removeImages(someList: ArrayList<ImageModel>) {
+    rxImageModelsList.removeAll(someList)
+  }
+
 }
