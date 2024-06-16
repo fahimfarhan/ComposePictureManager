@@ -104,6 +104,21 @@ class AppViewModel {
   }
 
   fun isImageFile(str: String?): Boolean {
+    if(str == null) return false
+
+    var isImgFIle = false
+    val imgExtList = listOf(".jpg", ".jpeg", ".png", ".gif", ".bmp")
+    for(ext in imgExtList) {
+      if(str.endsWith(ext)) {
+        isImgFIle = true
+        break
+      }
+    }
+    return isImgFIle
+  }
+
+  // doesn't work with windows!
+  fun isImageFileV1(str: String?): Boolean {
     // Regex to check valid image file extension.
     val regex = "(\\S+(\\.(?i)(jpe?g|png|gif|bmp))$)"
 
